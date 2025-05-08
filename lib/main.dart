@@ -92,11 +92,14 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            Icon(
-            Icons.star,
-            color: Colors.amber,
-            size:40.0,
-            )
+            IconButton(
+            icon: Icon(Icons.folder),
+            color: Colors.blue,
+            iconSize:40.0,
+            onPressed: (){
+              print('folderが開かれる');
+            },
+            ),
             
           ]
         ),
