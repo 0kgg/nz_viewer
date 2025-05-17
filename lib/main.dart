@@ -90,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: folder_num==1 
-          ?Row(
+          ?Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             IconButton(
@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
               print('folderが開かれる');
             },
             ),
-            
+            Text('フォルダ'),
           ]
         )
         : SizedBox(),
