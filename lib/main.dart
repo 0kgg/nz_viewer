@@ -93,28 +93,27 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-     
-            child: folder_num>=1 
-          ?Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            IconButton(
-            icon: Icon(Icons.folder),
-            color: Colors.blue,
-            iconSize:120.0,
-            onPressed: (){
-              print('folderが開かれる');
-             },
-          ),
-            SizedBox(height: 4),
-            Text('フォルダ'),
-          ],
-        )
-      
-        : SizedBox(),
+        child:
+            folder_num >= 1 && folderName != null
+                ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.folder),
+                      color: Colors.blue,
+                      iconSize: 120.0,
+                      onPressed: () {
+                        print('folderが開かれる');
+                      },
+                    ),
+                    SizedBox(height: 4),
+                    Text(folderName!),
+                  ],
+                )
+                : SizedBox(),
       ),
-     
+
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final name = await showFolderNameDialog(context);
