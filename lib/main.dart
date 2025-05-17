@@ -90,30 +90,44 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
+      body: (folder_num >= 1 && folderName != null)
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        child:
-            folder_num >= 1 && folderName != null
-                ? Column(
+        ? Padding(
+          padding: const EdgeInsets.all(6.0),
+        child: GridView.count(
+        crossAxisCount: 3,
+        mainAxisSpacing:8,
+        crossAxisSpacing:8,   
+        
+
+        children: List.generate(9, (index){
+          
+                return Column(
                   mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
+
+                                    
+                  children: [
                     IconButton(
-                      icon: Icon(Icons.folder),
+                      icon: Icon(Icons.add),
                       color: Colors.blue,
-                      iconSize: 120.0,
+                      iconSize: 80,
                       onPressed: () {
                         print('folderが開かれる');
                       },
                     ),
                     SizedBox(height: 4),
                     Text(folderName!),
-                  ],
-                )
-                : SizedBox(),
-      ),
 
+        
+                    
+                  ],
+                );
+        }
+        )
+        )
+      ):Center(child: Text('フォルダがありません')),
+  
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final name = await showFolderNameDialog(context);
