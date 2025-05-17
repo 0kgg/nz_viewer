@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'actions.dart';
+
 //あああ
 //test
 void main() {
@@ -56,7 +58,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  int folder_num =0;
+  int folder_num = 0;
+  String? folderName;
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -89,37 +93,39 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
-        
-        child: folder_num==1 
-          ?Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            IconButton(
-            icon: Icon(Icons.folder),
-            color: Colors.blue,
-            iconSize:120.0,
-            onPressed: (){
-              print('folderが開かれる');
-            },
-            ),
-            SizedBox(height: 4),
-            Text('フォルダ'),
-          ]
-        )
-        : SizedBox(),
+        child:
+            folder_num == 1
+                ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                      icon: Icon(Icons.folder),
+                      color: Colors.blue,
+                      iconSize: 120.0,
+                      onPressed: () {
+                        print('folderが開かれる');
+                      },
+                    ),
+                    SizedBox(height: 4),
+                    Text(folderName!),
+                  ],
+                )
+                : SizedBox(),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
+        onPressed: () async {
+          final name = await showFolderNameDialog(context);
+          if (name != null && name.isNotEmpty) {
             setState(() {
+              folderName = name;
               folder_num++;
             });
+          }
         },
-        tooltip: 'Increment',
+        tooltip: 'create foleder',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
-
-      
     );
   }
 }
