@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'actions.dart';
+
 //あああ
 //test
 void main() {
@@ -56,7 +58,9 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  int folder_num =0;
+  int folder_num = 0;
+  String? folderName;
+
   void _incrementCounter() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
@@ -112,16 +116,18 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
      
       floatingActionButton: FloatingActionButton(
-        onPressed: (){
+        onPressed: () async {
+          final name = await showFolderNameDialog(context);
+          if (name != null && name.isNotEmpty) {
             setState(() {
+              folderName = name;
               folder_num++;
             });
+          }
         },
-        tooltip: 'Increment',
+        tooltip: 'create foleder',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
-
-      
     );
   }
 }
