@@ -37,7 +37,43 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+Future<void> savePhotoToFolder(BuildContext context, String folderName) async {
+  // ここで写真を選択して保存する処理を実装
+  // 例: 画像ピッカーを使って写真を選択し、保存先フォルダ名を使って保存
+  // 実際の保存処理はプラグインやストレージAPIに応じて実装してください
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text('「$folderName」に写真を保存しました（ダミー処理）')),
+  );
+}
 
+Future<String?> showFolderNameDialog(BuildContext context) async {
+  String? folderName;
+  return showDialog<String>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('フォルダ名を入力'),
+        content: TextField(
+          autofocus: true,
+          onChanged: (value) {
+            folderName = value;
+          },
+          decoration: const InputDecoration(hintText: 'フォルダ名'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('キャンセル'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(folderName),
+            child: const Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -55,6 +91,26 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
+
+// ...existing code...
+
+// フォルダ詳細ページ
+class FolderPage extends StatelessWidget {
+  final String folderName;
+  const FolderPage({super.key, required this.folderName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(folderName)),
+      body: Center(child: Text('「$folderName」のページ')),
+    );
+  }
+}
+
+// ...MyHomePageクラスなど既存のコード...
+
+
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
@@ -103,29 +159,39 @@ class _MyHomePageState extends State<MyHomePage> {
           
                 return Column(
                   mainAxisSize: MainAxisSize.min,
+                  
 
                                     
                   children: [
                     IconButton(
                       icon: Icon(
-                       folderNames[index] != null ? Icons.photo_album :Icons.add),
+                      folderNames[index] != null ? Icons.photo_album :Icons.add),
                       color: folderNames[index] != null ? Colors.blue :Colors.black,
                       iconSize: 80,
-                      onPressed: () async{
-                        final name = await showFolderNameDialog(context);
-                        if (name != null && name.isNotEmpty) {
-                        setState(() {
-                        folderNames[index] = name;
-                        folder_num++;
-                        
-                          });
-                           
-                              }
+                      onPressed: () async {
+                        if (folderNames[index] != null) {
+                          // フォルダ名がある場合は詳細ページへ遷移
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FolderPage(folderName: folderNames[index]!),
+                            ),
+                          );
+                        } else {
+                          // フォルダ名がない場合は名前入力ダイアログを表示
+                          final name = await showFolderNameDialog(context);
+                          if (name != null && name.isNotEmpty) {
+                            setState(() {
+                              folderNames[index] = name;
+                              folder_num++;
+                            });
+                          }
+                        }
                       },
                     ),
                     SizedBox(height: 4),
                     Text(folderNames[index] ?? '空'),
-                                       
+                  
                   ],
                 );
         }
