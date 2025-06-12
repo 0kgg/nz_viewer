@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'actions.dart';
+//import 'actions.dart';
 
 //あああ
 //test
@@ -37,13 +37,14 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 Future<void> savePhotoToFolder(BuildContext context, String folderName) async {
   // ここで写真を選択して保存する処理を実装
   // 例: 画像ピッカーを使って写真を選択し、保存先フォルダ名を使って保存
   // 実際の保存処理はプラグインやストレージAPIに応じて実装してください
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text('「$folderName」に写真を保存しました（ダミー処理）')),
-  );
+  ScaffoldMessenger.of(
+    context,
+  ).showSnackBar(SnackBar(content: Text('「$folderName」に写真を保存しました（ダミー処理）')));
 }
 
 Future<String?> showFolderNameDialog(BuildContext context) async {
@@ -74,6 +75,7 @@ Future<String?> showFolderNameDialog(BuildContext context) async {
     },
   );
 }
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -110,24 +112,13 @@ class FolderPage extends StatelessWidget {
 
 // ...MyHomePageクラスなど既存のコード...
 
-
-
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  int folder_num = 0;
+  //int _counter = 0;
+  int folderNum = 0;
   String? folderName;
   List<String?> folderNames = List.filled(9, null);
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -147,58 +138,56 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body:  Padding(
-          padding: const EdgeInsets.all(6.0),
+      body: Padding(
+        padding: const EdgeInsets.all(6.0),
         child: GridView.count(
-        crossAxisCount: 3,
-        mainAxisSpacing:8,
-        crossAxisSpacing:8,   
-        
+          crossAxisCount: 3,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
 
-        children: List.generate(9, (index){
-          
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  
+          children: List.generate(9, (index) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
 
-                                    
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                      folderNames[index] != null ? Icons.photo_album :Icons.add),
-                      color: folderNames[index] != null ? Colors.blue :Colors.black,
-                      iconSize: 80,
-                      onPressed: () async {
-                        if (folderNames[index] != null) {
-                          // フォルダ名がある場合は詳細ページへ遷移
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FolderPage(folderName: folderNames[index]!),
-                            ),
-                          );
-                        } else {
-                          // フォルダ名がない場合は名前入力ダイアログを表示
-                          final name = await showFolderNameDialog(context);
-                          if (name != null && name.isNotEmpty) {
-                            setState(() {
-                              folderNames[index] = name;
-                              folder_num++;
-                            });
-                          }
-                        }
-                      },
-                    ),
-                    SizedBox(height: 4),
-                    Text(folderNames[index] ?? '空'),
-                  
-                  ],
-                );
-        }
-        )
-        )
+              children: [
+                IconButton(
+                  icon: Icon(
+                    folderNames[index] != null ? Icons.photo_album : Icons.add,
+                  ),
+                  color:
+                      folderNames[index] != null ? Colors.blue : Colors.black,
+                  iconSize: 80,
+                  onPressed: () async {
+                    if (folderNames[index] != null) {
+                      // フォルダ名がある場合は詳細ページへ遷移
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) =>
+                                  FolderPage(folderName: folderNames[index]!),
+                        ),
+                      );
+                    } else {
+                      // フォルダ名がない場合は名前入力ダイアログを表示
+                      final name = await showFolderNameDialog(context);
+                      if (name != null && name.isNotEmpty) {
+                        setState(() {
+                          folderNames[index] = name;
+                          folderNum++;
+                        });
+                      }
+                    }
+                  },
+                ),
+                SizedBox(height: 4),
+                Text(folderNames[index] ?? '空'),
+              ],
+            );
+          }),
+        ),
       ),
-  
+
       /*floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final name = await showFolderNameDialog(context);
