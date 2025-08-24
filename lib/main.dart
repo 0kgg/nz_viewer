@@ -212,9 +212,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         setState(() {
                           folderNames[index] = newName;
                         });
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('フォルダ名を「$newName」に変更しました')),
-                        );
+                        // mountedチェックを追加
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('フォルダ名を「$newName」に変更しました')),
+                          );
+                        }
                       }
                     }
                   },
