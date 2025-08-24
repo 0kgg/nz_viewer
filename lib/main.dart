@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-//import 'actions.dart';
-
-//あああ
-//test
+import 'dart:io';
+import 'package:image_picker/image_picker.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -143,8 +141,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  //int _counter = 0;
-  int folderNum = 0;
   String? folderName;
   List<String?> folderNames = List.filled(9, null);
 
@@ -196,7 +192,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       if (name != null && name.isNotEmpty) {
                         setState(() {
                           folderNames[index] = name;
-                          folderNum++;
                         });
                       }
                     }
