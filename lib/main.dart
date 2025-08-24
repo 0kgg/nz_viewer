@@ -76,6 +76,54 @@ Future<String?> showFolderNameDialog(BuildContext context) async {
   );
 }
 
+// フォルダ名編集用のダイアログ
+Future<String?> showEditFolderNameDialog(
+  BuildContext context,
+  String currentName,
+) async {
+  String? folderName = currentName;
+  return showDialog<String>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('フォルダ名を編集'),
+        content: TextField(
+          autofocus: true,
+          controller: TextEditingController(text: currentName),
+          onChanged: (value) {
+            folderName = value;
+          },
+          decoration: const InputDecoration(hintText: 'フォルダ名'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('キャンセル'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(folderName),
+            child: const Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+// フォルダ詳細ページ
+class FolderPage extends StatelessWidget {
+  final String folderName;
+  const FolderPage({super.key, required this.folderName});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(folderName)),
+      body: Center(child: Text('「$folderName」のページ')),
+    );
+  }
+}
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
@@ -94,31 +142,11 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-// ...existing code...
-
-// フォルダ詳細ページ
-class FolderPage extends StatelessWidget {
-  final String folderName;
-  const FolderPage({super.key, required this.folderName});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(folderName)),
-      body: Center(child: Text('「$folderName」のページ')),
-    );
-  }
-}
-
-// ...MyHomePageクラスなど既存のコード...
-
 class _MyHomePageState extends State<MyHomePage> {
   //int _counter = 0;
   int folderNum = 0;
   String? folderName;
   List<String?> folderNames = List.filled(9, null);
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -150,14 +178,8 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisSize: MainAxisSize.min,
 
               children: [
-                IconButton(
-                  icon: Icon(
-                    folderNames[index] != null ? Icons.photo_album : Icons.add,
-                  ),
-                  color:
-                      folderNames[index] != null ? Colors.blue : Colors.black,
-                  iconSize: 80,
-                  onPressed: () async {
+                GestureDetector(
+                  onTap: () async {
                     if (folderNames[index] != null) {
                       // フォルダ名がある場合は詳細ページへ遷移
                       Navigator.push(
@@ -179,6 +201,34 @@ class _MyHomePageState extends State<MyHomePage> {
                       }
                     }
                   },
+                  onLongPress: () async {
+                    // 既存のフォルダがある場合のみ長押しで編集可能
+                    if (folderNames[index] != null) {
+                      final newName = await showEditFolderNameDialog(
+                        context,
+                        folderNames[index]!,
+                      );
+                      if (newName != null && newName.isNotEmpty) {
+                        setState(() {
+                          folderNames[index] = newName;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('フォルダ名を「$newName」に変更しました')),
+                        );
+                      }
+                    }
+                  },
+                  child: IconButton(
+                    icon: Icon(
+                      folderNames[index] != null
+                          ? Icons.photo_album
+                          : Icons.add,
+                    ),
+                    color:
+                        folderNames[index] != null ? Colors.blue : Colors.black,
+                    iconSize: 80,
+                    onPressed: null, // GestureDetectorで処理するため無効化
+                  ),
                 ),
                 SizedBox(height: 4),
                 Text(folderNames[index] ?? '空'),
